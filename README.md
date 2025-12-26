@@ -1,9 +1,10 @@
+<!-- HEADER -->
 <div align="center">
     <a href="https://www.alko.fi">
         <img src="/assets/alko-logo.svg" width="150px">
     </a>
     <h1>
-        Alko API
+        API
     </h1>
 </div>
 
