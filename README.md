@@ -1,6 +1,6 @@
 <div align="center">
     <a href="https://www.alko.fi">
-        <img src="/assets/alko-logo.svg" width="250px">
+        <img src="/assets/alko-logo.svg" width="150px">
     </a>
     <h1>
         Alko API
