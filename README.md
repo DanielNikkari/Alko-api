@@ -8,7 +8,7 @@
     </h1>
 </div>
 
-Alko product API implemented on FastAPI ⚡.
+Alko product API implemented on ⚡ FastAPI.
 
 ## Setting up data
 
@@ -29,7 +29,7 @@ uv run python -m scraper.fetch_products
 uv run fastapi run ./app/main.py
 ```
 
-### Running in Container 🐳
+### Running in Container
 
 **Sync**
 ```bash
@@ -52,7 +52,7 @@ If everything is working as it should, the health check (`/health`) should look 
 
 <div align="center">
     <a href="#">
-        <img src="/assets/health-check.png" width="200px" alt="health check example" >
+        <img src="/assets/health-check.png" width="250px" alt="health check example" >
     </a>
 </div>
 
