@@ -2,6 +2,7 @@ import os
 import polars
 import time
 import shutil
+import pydantic
 
 from pathlib import Path
 from app.schemas.products import Product, Products
@@ -51,7 +52,29 @@ def init_product_db() -> polars.DataFrame:
 
     try:
         filepath: Path = get_newest_sheet(DOWNLOAD_PATH)
-        df = polars.read_excel(source=str(filepath), sheet_name="Alkon Hinnasto Tekstitiedostona", has_header=True, read_options={"skip_rows": 3})
+        df = polars.read_excel(
+            source=str(filepath), 
+            sheet_name="Alkon Hinnasto Tekstitiedostona", 
+            engine="xlsx2csv",
+            read_options={
+                "skip_rows": 3,
+                "schema_overrides": {
+                    "Nimi": polars.Utf8,
+                    "Valmistaja": polars.Utf8,
+                    "Hinnastojärjestyskoodi": polars.Utf8,
+                    "Numero": polars.Utf8,
+                    "EAN": polars.Utf8,
+                    "Luonnehdinta": polars.Utf8,
+                    "Rypäleet": polars.Utf8,
+                }
+            }
+        )
+        df = df.with_columns(
+            polars.col("Uutuus").is_not_null()
+        )
+        df = df.with_columns(
+            polars.col(polars.Utf8).str.replace_all("\xa0", " ").str.strip_chars()
+        )
     except Exception as e:
         raise RuntimeError(f"Unexpected error while reading data sheet into DataFrame: {e}")
     finally:
@@ -59,3 +82,17 @@ def init_product_db() -> polars.DataFrame:
         DOWNLOAD_PATH.mkdir(exist_ok=True)
 
     return df
+
+def get_all_products(products: polars.DataFrame) -> Products:
+    """
+    Get all products.
+    Args:
+        products: DataFrame of the products.
+    Returns:
+        Products (pydantic.BaseModel): Model that contains list of Products
+    """
+    products = Products(
+        product_count=len(products),
+        products=[Product(**data) for data in products]
+    )
+
