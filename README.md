@@ -16,10 +16,18 @@ Alko product API implemented on ⚡ FastAPI.
 ```bash
 uv sync
 ```
+or
+```bash
+make install
+```
 
 **Get product data**
 ```bash
 uv run python -m scraper.fetch_products
+```
+or
+```bash
+make fetch
 ```
 
 ## Running API
@@ -40,10 +48,27 @@ uv sync
 ```bash
 docker build -t alko-api .
 ```
+or
+```bash
+make build
+```
 
 **Run**
 ```bash
 docker run --name alko-api --env ".env" -p "8080:80" alko-api
+```
+or
+```bash
+make run
+```
+
+**Clean up**
+```bash
+docker rm -f alko-api
+```
+or
+```bash
+make stop
 ```
 
 ## Health check
