@@ -1,7 +1,6 @@
 import logging
 import os
 from contextlib import asynccontextmanager
-from datetime import datetime
 from pathlib import Path
 
 from dotenv import load_dotenv
@@ -43,24 +42,23 @@ app.include_router(products.router)
 async def root(request: Request):
     status = "healthy"
     message = None
+    product_count = 0
+    update_date = "Unknown"
 
     try:
-        if request.app.state.products is None:
+        db = request.app.state.products
+        if db is None or db.df is None:
             status = "unhealthy"
             message = "Products data not loaded"
-        elif request.app.state.products.height == 0:
+        elif db.df.height == 0:
             status = "unhealthy"
             message = "Products data is empty"
+        else:
+            product_count = db.product_count
+            update_date = db.updated_at.strftime("%Y-%m-%d %H:%M:%S")
     except AttributeError:
         status = "unhealthy"
         message = "Application state not initialized"
-
-    product_count = 0
-    try:
-        if request.app.state.products is not None:
-            product_count = len(request.app.state.products)
-    except AttributeError:
-        pass
 
     return templates.TemplateResponse(
         request=request,
@@ -70,7 +68,7 @@ async def root(request: Request):
             "VERSION": API_VERSION,
             "ENVIRONMENT": ENVIRONMENT,
             "PRODUCT_COUNT": product_count,
-            "UPDATE_DATE": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+            "UPDATE_DATE": update_date,
             "MESSAGE": message,
         },
         status_code=200 if status == "healthy" else 503,
@@ -81,24 +79,23 @@ async def root(request: Request):
 async def health(request: Request):
     status = "healthy"
     message = None
+    product_count = 0
+    update_date = "Unknown"
 
     try:
-        if request.app.state.products is None:
+        db = request.app.state.products
+        if db is None or db.df is None:
             status = "unhealthy"
             message = "Products data not loaded"
-        elif request.app.state.products.height == 0:
+        elif db.df.height == 0:
             status = "unhealthy"
             message = "Products data is empty"
+        else:
+            product_count = db.product_count
+            update_date = db.updated_at.strftime("%Y-%m-%d %H:%M:%S")
     except AttributeError:
         status = "unhealthy"
         message = "Application state not initialized"
-
-    product_count = 0
-    try:
-        if request.app.state.products is not None:
-            product_count = len(request.app.state.products)
-    except AttributeError:
-        pass
 
     return templates.TemplateResponse(
         request=request,
@@ -108,7 +105,7 @@ async def health(request: Request):
             "VERSION": API_VERSION,
             "ENVIRONMENT": ENVIRONMENT,
             "PRODUCT_COUNT": product_count,
-            "UPDATE_DATE": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+            "UPDATE_DATE": update_date,
             "MESSAGE": message,
         },
         status_code=200 if status == "healthy" else 503,
@@ -118,15 +115,13 @@ async def health(request: Request):
 @app.get("/stats", response_class=HTMLResponse)
 async def stats(request: Request):
     """Get product statistics page."""
-    df = request.app.state.products
+    df = request.app.state.products.df
 
-    # Get top types
     top_types = (
         df.group_by("Tyyppi").len().sort("len", descending=True).head(5).to_dicts()
     )
     top_types = [{"type": item["Tyyppi"], "count": item["len"]} for item in top_types]
 
-    # Get top countries
     top_countries = (
         df.group_by("Valmistusmaa")
         .len()

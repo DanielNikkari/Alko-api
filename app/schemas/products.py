@@ -1,3 +1,7 @@
+from dataclasses import dataclass
+from datetime import datetime
+
+import polars
 import pydantic
 from pydantic import Field, computed_field
 
@@ -52,3 +56,10 @@ class Product(pydantic.BaseModel):
         return f"https://www.alko.fi/tuotteet/{self.product_id}/"
 
     model_config = pydantic.ConfigDict(populate_by_name=True)
+
+
+@dataclass
+class ProductDatabase:
+    df: polars.DataFrame
+    updated_at: datetime
+    product_count: int

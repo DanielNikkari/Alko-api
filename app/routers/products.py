@@ -18,7 +18,7 @@ router = APIRouter(
 async def get_all_products(request: Request):
     """Get all products."""
     logger.info("Getting all products...")
-    df = request.app.state.products
+    df = request.app.state.products.df
     adapter = TypeAdapter(list[Product])
     products = adapter.validate_python(df.to_dicts())
     return products
@@ -50,7 +50,7 @@ async def query_products(
 ):
     """Query products with extended filtering options."""
     logger.info("Querying products...")
-    df = request.app.state.products
+    df = request.app.state.products.df
     adapter = TypeAdapter(list[Product])
     results = search_products(
         df,
@@ -83,7 +83,7 @@ async def query_products(
 async def get_product_by_id(request: Request, product_id: str):
     """Get product by ID."""
     logger.info(f"Getting product by ID {product_id}")
-    df = request.app.state.products
+    df = request.app.state.products.df
     adapter = TypeAdapter(list[Product])
     results = df.filter(polars.col("Numero").cast(polars.Utf8) == product_id).to_dicts()
     products = adapter.validate_python(results)
