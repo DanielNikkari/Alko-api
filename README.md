@@ -90,6 +90,15 @@ Documentation is handled automatically by FastAPI and is available on endpoint `
 <!-- MCP -->
 ## Running MCP Server
 
+**Run MCP Server**
+```bash
+make mcp
+```
+or
+```bash
+uv run mcp/mcp_server.py
+```
+
 You can serve the Alko product API to a LLM Client, for example, Claude desktop by adding the following to `claude_desktop_config.json`
 
 ```json
