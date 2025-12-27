@@ -50,7 +50,11 @@ docker run --name alko-api --env ".env" -p "8080:80" alko-api
 
 If everything is working as it should, the health check (`/health`) should look something like this:
 
-![health check example](/assets/health-check.png)
+<div align="center">
+    <a href="#">
+        <img src="/assets/health-check.png" width="200px" alt="health check example" >
+    </a>
+</div>
 
 ## API Documentation
 

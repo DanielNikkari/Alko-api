@@ -5,7 +5,7 @@ from pathlib import Path
 
 from dotenv import load_dotenv
 from fastapi import FastAPI, Request
-from fastapi.responses import HTMLResponse, ORJSONResponse
+from fastapi.responses import FileResponse, HTMLResponse, ORJSONResponse, Response
 from fastapi.templating import Jinja2Templates
 
 from app.routers import products
@@ -149,3 +149,11 @@ async def stats(request: Request):
             "TOP_COUNTRIES": top_countries,
         },
     )
+
+
+@app.get("/favicon.ico", include_in_schema=False)
+async def favicon():
+    favicon_path = Path(__file__).parent / "static" / "favicon.ico"
+    if favicon_path.exists():
+        return FileResponse(favicon_path)
+    return Response(status_code=404)
