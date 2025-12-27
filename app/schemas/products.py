@@ -52,8 +52,3 @@ class Product(pydantic.BaseModel):
         return f"https://www.alko.fi/tuotteet/{self.product_id}/"
     
     model_config = pydantic.ConfigDict(populate_by_name=True)
-
-class Products(pydantic.BaseModel):
-    products: list[Product]
-    product_count: int
-    query_parameter: str
