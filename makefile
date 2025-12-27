@@ -1,4 +1,4 @@
-.PHONY: dev fetch build run stop docs logs install
+.PHONY: dev fetch build run stop docs logs install mcp
 
 # Run locally
 dev:
@@ -10,7 +10,7 @@ fetch:
 
 # Build Docker image
 build:
-	docker build -t alko-api .
+	docker build -f app/Dockerfile -t alko-api .
 
 # Run Docker container
 run:
@@ -31,3 +31,7 @@ logs:
 # Install dependencies
 install:
 	uv sync
+
+# Run Alko MCP server
+mcp:
+	uv run mcp/mcp_server.py

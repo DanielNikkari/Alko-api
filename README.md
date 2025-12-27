@@ -10,6 +10,7 @@
 
 Alko product API implemented on ⚡ FastAPI.
 
+<!-- SETUP -->
 ## Setting up data
 
 **Sync**
@@ -30,6 +31,7 @@ or
 make fetch
 ```
 
+<!-- API -->
 ## Running API
 
 **Run server**
@@ -46,7 +48,7 @@ uv sync
 
 **Build**
 ```bash
-docker build -t alko-api .
+docker build -f app/Dockerfile -t alko-api .
 ```
 or
 ```bash
@@ -84,3 +86,26 @@ If everything is working as it should, the health check (`/health`) should look 
 ## API Documentation
 
 Documentation is handled automatically by FastAPI and is available on endpoint `/docs`.
+
+<!-- MCP -->
+## Running MCP Server
+
+You can serve the Alko product API to a LLM Client, for example, Claude desktop by adding the following to `claude_desktop_config.json`
+
+```json
+{
+    "mcpServers": {
+    "alko-mcp": {
+      "command": "uv",
+      "args": [
+        "--directory",
+        "/path/to/Alko-api",
+        "run",
+        "mcp/mcp_server.py"
+      ]
+    }
+  }
+}
+```
+> [!NOTE]
+> Remember to have your Alko API running for the MCP client!
