@@ -12,6 +12,7 @@ import polars
 from dotenv import load_dotenv
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.support.ui import WebDriverWait
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -45,6 +46,19 @@ def get_newest_sheet(folder: Path) -> Path:
     return max(xlsx_files, key=lambda f: f.stat().st_mtime)
 
 
+def wait_for_download_to_finish(
+    driver: webdriver.Chrome, directory: Path, timeout: int = 30
+) -> Path:
+    """Wait for the file to finish downloading."""
+
+    def download_complete(driver):
+        files = list(directory.glob("*"))
+        complete_files = [f for f in files if not f.name.startswith(".")]
+        return complete_files[0] if complete_files else False
+
+    return WebDriverWait(driver=driver, timeout=timeout).until(download_complete)
+
+
 def fetch_and_process() -> polars.DataFrame:
     """Download and process the Alko product sheet."""
     logger.info("Fetching product data from Alko...")
@@ -58,14 +72,10 @@ def fetch_and_process() -> polars.DataFrame:
 
     try:
         driver.get(product_sheet_url)
-        # Wait for download - consider using WebDriverWait for robustness
-        import time
-
-        time.sleep(10)
+        filepath = wait_for_download_to_finish(driver, DOWNLOAD_PATH, timeout=30)
     finally:
         driver.quit()
 
-    filepath = get_newest_sheet(DOWNLOAD_PATH)
     logger.info(f"Processing {filepath}...")
 
     df = polars.read_excel(
