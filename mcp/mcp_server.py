@@ -37,7 +37,7 @@ def health_check():
 
 
 @mcp.tool(
-    name="find_alko_products",
+    name="search_alko_products",
     description="Search the product database with search terms.",
 )
 def search_products(
@@ -67,6 +67,44 @@ def search_products(
     response = requests.get(
         f"{ALKO_API_BASE_URL}/api/{ALKO_API_API_VERSION}/products/queryProducts",
         params=params,
+    )
+    response.raise_for_status()
+    return response.json()
+
+
+@mcp.tool(
+    name="get_product_types", description="List all unique product types available."
+)
+def get_product_types():
+    response = requests.get(
+        f"{ALKO_API_BASE_URL}/api/{ALKO_API_API_VERSION}/products/productTypes",
+    )
+    response.raise_for_status()
+    return response.json()
+
+
+@mcp.tool(name="get_producers", description="List all unique producers.")
+def get_producers():
+    response = requests.get(
+        f"{ALKO_API_BASE_URL}/api/{ALKO_API_API_VERSION}/products/producers",
+    )
+    response.raise_for_status()
+    return response.json()
+
+
+@mcp.tool(name="get_countries", description="List all countries of origin available.")
+def get_countries():
+    response = requests.get(
+        f"{ALKO_API_BASE_URL}/api/{ALKO_API_API_VERSION}/products/countries",
+    )
+    response.raise_for_status()
+    return response.json()
+
+
+@mcp.tool(name="get_areas", description="List all areas of origin available.")
+def get_areas():
+    response = requests.get(
+        f"{ALKO_API_BASE_URL}/api/{ALKO_API_API_VERSION}/products/areas",
     )
     response.raise_for_status()
     return response.json()

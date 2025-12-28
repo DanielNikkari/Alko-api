@@ -2,7 +2,7 @@
 
 # Run locally
 dev:
-	uv run fastapi dev app/main.py
+	uv run fastapi dev app/main.py --reload
 
 # Fetch product data
 fetch:
