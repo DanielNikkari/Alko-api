@@ -31,8 +31,8 @@ ALKO_API_API_VERSION = os.getenv("API_VERSION")
 mcp = FastMCP("Alko Product MCP Server")
 
 
-@mcp.resource("health://")
-def health_check():
+@mcp.resource("alko://health")
+def health_check() -> dict:
     return {"status": "healthy", "service": "alko-mcp"}
 
 
