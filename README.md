@@ -106,6 +106,6 @@ Add the following to your `claude_desktop_config.json`:
 
 <div align="center">
     <a href="#">
-        <img src="/assets/claude_desktop_alko_mcp_example.png" width="250px" alt="Claude Desktop Alko MCP example" >
+        <img src="/assets/claude_desktop_alko_mcp_example.png" width="500px" alt="Claude Desktop Alko MCP example" >
     </a>
 </div>
