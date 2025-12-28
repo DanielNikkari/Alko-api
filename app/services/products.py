@@ -107,3 +107,23 @@ def search_products(
     logger.info(f"Found {len(df)} results after filtering.")
 
     return df
+
+
+def get_product_types(df: polars.DataFrame) -> list[str]:
+    """Get all unique product types."""
+    return df["Tyyppi"].drop_nulls().unique().to_list()
+
+
+def get_producers(df: polars.DataFrame) -> list[str]:
+    """Get all unique producers."""
+    return df["Valmistaja"].drop_nulls().unique().to_list()
+
+
+def get_countries(df: polars.DataFrame) -> list[str]:
+    """Get all unique countries."""
+    return df["Valmistusmaa"].drop_nulls().unique().to_list()
+
+
+def get_areas(df: polars.DataFrame) -> list[str]:
+    """Get all unique areas."""
+    return df["Alue"].drop_nulls().unique().to_list()

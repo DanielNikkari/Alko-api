@@ -4,8 +4,8 @@ import polars
 from fastapi import APIRouter, Query, Request
 from pydantic import TypeAdapter
 
+import app.services.products as product_service
 from app.schemas.products import Product
-from app.services.products import search_products
 
 logger = logging.getLogger(__file__)
 
@@ -52,7 +52,7 @@ async def query_products(
     logger.info("Querying products...")
     df = request.app.state.products.df
     adapter = TypeAdapter(list[Product])
-    results = search_products(
+    results = product_service.search_products(
         df,
         name=name,
         producer=producer,
@@ -77,6 +77,38 @@ async def query_products(
     results = results.head(limit).to_dicts()
     products = adapter.validate_python(results)
     return products
+
+
+@router.get("/productTypes")
+async def get_product_types(request: Request):
+    """Get unique product types."""
+    logger.info("Getting unique product types.")
+    df = request.app.state.products.df
+    return product_service.get_product_types(df)
+
+
+@router.get("/producers")
+async def get_producers(request: Request):
+    """Get unique producers, such as vineyards."""
+    logger.info("Getting unique producers.")
+    df = request.app.state.products.df
+    return product_service.get_producers(df)
+
+
+@router.get("/countries")
+async def get_countries(request: Request):
+    """Get unique countries of origin."""
+    logger.info("Getting unique countries.")
+    df = request.app.state.products.df
+    return product_service.get_countries(df)
+
+
+@router.get("/areas")
+async def get_areas(request: Request):
+    """Get unique areas of origin."""
+    logger.info("Getting unique areas.")
+    df = request.app.state.products.df
+    return product_service.get_areas(df)
 
 
 @router.get("/{product_id}")
