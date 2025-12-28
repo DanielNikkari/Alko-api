@@ -23,12 +23,17 @@ logger.info("Starting MCP server...")
 load_dotenv()
 
 MCP_PORT = os.getenv("MCP_PORT")
-MCP_HOST = os.getenv("HOST")
+MCP_HOST = os.getenv("MCP_HOST")
 TRANSPORT = os.getenv("TRANSPORT", "stdio")
 ALKO_API_BASE_URL = os.getenv("BASE_URL")
 ALKO_API_API_VERSION = os.getenv("API_VERSION")
 
 mcp = FastMCP("Alko Product MCP Server")
+
+
+@mcp.resource("health://")
+def health_check():
+    return {"status": "healthy", "service": "alko-mcp"}
 
 
 @mcp.tool(
