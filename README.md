@@ -6,7 +6,14 @@
     <h1>Alko API</h1>
 </div>
 
-Alko product API built with FastAPI. Includes an MCP server for LLM integration.
+Alko product API built with FastAPI. Includes an MCP server for LLM integration. [**Check out the API here**](https://alko-api-d0gi.onrender.com/)
+
+## Access API
+
+Access the API on *Render*: https://alko-api-d0gi.onrender.com/
+
+> [!NOTE]
+> The API is hosted on Render's free tier, so the first request may take 10-30 seconds if the server has been sleeping.
 
 ## Prerequisites
 
