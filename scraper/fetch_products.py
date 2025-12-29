@@ -52,9 +52,11 @@ def wait_for_download_to_finish(
     """Wait for the file to finish downloading."""
 
     def download_complete(driver):
-        files = list(directory.glob("*"))
-        complete_files = [f for f in files if not f.name.startswith(".")]
-        return complete_files[0] if complete_files else False
+        xlsx_files = list(directory.glob("*.xlsx"))
+        crdownload_files = list(directory.glob("*.crdownload"))
+        if xlsx_files and not crdownload_files:
+            return xlsx_files[0]
+        return False
 
     return WebDriverWait(driver=driver, timeout=timeout).until(download_complete)
 
