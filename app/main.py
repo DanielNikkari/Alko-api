@@ -151,9 +151,9 @@ async def stats(request: Request):
     )
 
 
-@app.get("/favicon.ico", include_in_schema=False)
+@app.get("/favicon.svg", include_in_schema=False)
 async def favicon():
-    favicon_path = Path(__file__).parent / "static" / "favicon.ico"
+    favicon_path = Path(__file__).parent / "static" / "favicon.svg"
     if favicon_path.exists():
         return FileResponse(favicon_path)
     return Response(status_code=404)

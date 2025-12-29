@@ -1,0 +1,36 @@
+name: Weekly Alko Scrape
+
+on:
+    schedule:
+        - cron: '0 6 * * 1'  # Every Monday at 6 AM UTC
+    workflow_dispatch:
+
+jobs:
+    scrape:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+
+            - name: Set up Python
+              uses: actions/setup-python@v5
+              with:
+                python-version: '3.13'
+
+            - name: Install Chrome
+              uses: browser-actions/setup-chrome@v1
+
+            - name: Install dependencies
+              run: pip install selenium polars python-dotenv xlsx2csv
+
+            - name: Run scraper
+              env:
+                ALKO_PRODUCT_SHEET: 'https://www.alko.fi/INTERSHOP/static/WFS/Alko-OnlineShop-Site/-/Alko-OnlineShop/fi_FI/Alkon Hinnasto Tekstitiedostona/alkon-hinnasto-tekstitiedostona.xlsx'
+              run: python scraper/fetch_products.py
+
+            - name: Upload to storage
+              run: |
+                git config user.name "github-actions[bot]"
+                git config user.email "github-actions[bot]@users.noreply.github.com"
+                git add data/
+                git diff --staged --quiet || git commit -m "Update product data $(date -I)"
+                git push
